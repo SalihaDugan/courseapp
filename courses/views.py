@@ -1,9 +1,11 @@
 from django.http import Http404
 from django.shortcuts import  get_object_or_404, redirect, render
 
-from courses.forms import CourseCreateForm, CourseEditForm
-from .models import Categories, Course
+from courses.forms import CourseCreateForm, CourseEditForm, UploadForm
+from .models import Categories, Course, UploadModel
 from django.core.paginator import Paginator
+import random
+import os 
 
 def index(request):
     # list comphension
@@ -17,7 +19,7 @@ def index(request):
 
 def create_course(request):
     if request.method == "POST":
-        form = CourseCreateForm(request.POST)
+        form = CourseCreateForm(request.POST, request.FILES)
 
         if form.is_valid():
             # kurs = Course(title = form.cleaned_data["title"], 
@@ -45,7 +47,7 @@ def course_edit(request, id):
     course = get_object_or_404(Course, pk=id)
 
     if request.method == "POST":
-        form = CourseEditForm(request.POST, instance=course)
+        form = CourseEditForm(request.FILES, request.POST, instance=course)
         form.save()
         return redirect("course_list")
     else:
@@ -65,7 +67,52 @@ def course_delete(request, id):
     return render(request, "courses/course-delete.html", {
         "course": course
     })
+
+# def upload(request):
+#     if request.method == "POST":
+#         uploaded_images = request.FILES.getlist("images")
+#         for file in uploaded_images:
+#             handle_uploaded_files(file)
+#         return render(request, "courses/succes.html")
+
+#     return render(request, "courses/upload.html")
+
+# def upload(request):
+#     if request.method == "POST":
+#         form = UploadForm(request.POST, request.FILES)
+
+#         if form.is_valid():
+#             uploaded_image = request.FILES["image"]
+#             handle_uploaded_files(uploaded_image)
+#             return render(request, "courses/succes.html")
+#     else:
+#         form = UploadForm()
+#     return render(request, "courses/upload.html", {"form": form})
+
+# def handle_uploaded_files(file):
+#     number = random.randint(1,99999)
+#     # file_name _ 12222.jpg
+#     filename, file_extention = os.path.splitext(file.name)
+#     name = filename + "_" + str(number) + file_extention
+#     with open("temp/" + name,"wb+") as destination:
+
+#         for chunk in file.chunks():
+#             destination.write(chunk)
     
+
+def upload(request):
+    if request.method == "POST":
+        form = UploadForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            model = UploadModel(image = request.FILES["image"])
+            model.save()
+                        
+            return render(request, "courses/succes.html")
+    else:
+        form = UploadForm()
+    return render(request, "courses/upload.html", {"form": form})
+
 
 def search(request):
     if "q" in request.GET and request.GET["q"] != "":
