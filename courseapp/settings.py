@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'courses',
     'pages',
-    'account'
+    'account',
+    'ckeditor'
 ]
 
 MIDDLEWARE = [
