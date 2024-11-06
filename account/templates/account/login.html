@@ -7,7 +7,7 @@
 {% endblock css_files %}
 
 {% block page_title %}
-    {{course.title}}
+
 {% endblock page_title %}
 
 
@@ -15,16 +15,20 @@
 {% block content %}
 <div class="container mt-3">
     <div class="row">
-        <div class="col-5">
-            <img class="img-fluid rounded" src="{{course.image.url}}" alt="{{course.title}}">
+        <div class="col-12">
+            <h1>Login</h1>
+            <hr>
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% include "partials/_form.html" %}
+
+
+                <button type="submit" class="btn btn-primary">Giriş Yap</button>
+            </form>
+
+
         </div>
-        <div class="col-7">
-            <h1 class="h3">{{ course.title}}</h1>
-            <p>
-                {{course.description}}
-            </p>
-            
-        </div>
+
     </div>
 </div>
 {% endblock content %}

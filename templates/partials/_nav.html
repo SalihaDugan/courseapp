@@ -12,25 +12,43 @@
                 <li class="nav-item">
                     <a href="{% url "index" %}" class="nav-link">Kurslar</a>
                 </li>
-                <li class="nav-item">
-                    <a href="{% url "create_course" %}" class="nav-link">Admin Kurs Ekle</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url "course_list" %}" class="nav-link">Admin Kurslar</a>
-                </li>
+                {% if user.is_superuser %}
+                    <li class="nav-item">
+                        <a href="{% url "create_course" %}" class="nav-link">Admin Kurs Ekle</a>
+                    </li>
+                {% endif %}
+
+                {% if user.is_superuser %}
+                    <li class="nav-item">
+                        <a href="{% url "course_list" %}" class="nav-link">Admin Kurslar</a>
+                    </li>
+                {% endif %}
+
             </ul>
 
 
             <ul class="navbar-nav me-1">
-                <li class="nav-item">
-                    <a href="{% url "user_login" %}" class="nav-link">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url "user_register" %}" class="nav-link">Register</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url "user_logout" %}" class="nav-link">Logout</a>
-                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Hoş geldin, {{user.username}}</a>
+                    </li>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url "change_password" %}" class="nav-link">Parola Güncelle</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url "user_logout" %}" class="nav-link">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a href="{% url "user_login" %}" class="nav-link">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url "user_register" %}" class="nav-link">Register</a>
+                    </li>                
+                {% endif %}
+
+
 
 
             </ul>

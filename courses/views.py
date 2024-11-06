@@ -6,6 +6,7 @@ from .models import Categories, Course, UploadModel
 from django.core.paginator import Paginator
 import random
 import os 
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 def index(request):
     # list comphension
@@ -17,7 +18,12 @@ def index(request):
         'courses': kurslar
     })
 
+def isAdmin(user):
+    return user.is_superuser
+
+@user_passes_test(isAdmin)
 def create_course(request):
+
     if request.method == "POST":
         form = CourseCreateForm(request.POST, request.FILES)
 
@@ -36,6 +42,9 @@ def create_course(request):
 
     return render(request, "courses/create-course.html", {"form":form})
 
+
+@user_passes_test(isAdmin)
+#@login_required
 def course_list(request):
     kurslar = Course.objects.all()
 
@@ -43,6 +52,7 @@ def course_list(request):
         'courses': kurslar
     })    
 
+@user_passes_test(isAdmin)
 def course_edit(request, id):
     course = get_object_or_404(Course, pk=id)
 
@@ -56,7 +66,7 @@ def course_edit(request, id):
     return render(request, "courses/edit-course.html", {
         "form": form
     })
-
+@user_passes_test(isAdmin)
 def course_delete(request, id):
     course = get_object_or_404(Course, pk=id)
     
