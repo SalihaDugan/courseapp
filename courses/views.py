@@ -2,20 +2,24 @@ from django.http import Http404
 from django.shortcuts import  get_object_or_404, redirect, render
 
 from courses.forms import CourseCreateForm, CourseEditForm, UploadForm
-from .models import Categories, Course, UploadModel
+from .models import Categories, Course, Slider, UploadModel
 from django.core.paginator import Paginator
 import random
 import os 
 from django.contrib.auth.decorators import login_required, user_passes_test
+
+
 
 def index(request):
     # list comphension
     kurslar = Course.objects.filter(isActive = 1, isHome = 1)
     
     kategoriler = Categories.objects.all()
+    sliders = Slider.objects.filter(is_active=True)
     return render(request, 'courses/index.html', {
         'categories': kategoriler,
-        'courses': kurslar
+        'courses': kurslar,
+        'sliders': sliders
     })
 
 def isAdmin(user):
